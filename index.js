@@ -1,11 +1,15 @@
 const express = require('express');
 require('dotenv').config();
+const { dbConnection } = require('./database/config');
 
 // Muestra todas las variables de entorno incluida las variables del .env
 // console.log( process.env );
 
 //* Crear el servidor de express
 const app = express();
+
+//* DataBase
+dbConnection();
 
 
 //* Directorio público
