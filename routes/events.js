@@ -6,7 +6,10 @@
 
 const { Router } = require('express');
 const router = Router();
+const { check } = require('express-validator');
+const { fieldValidations } = require('../middlewares/field-validation');
 const { validateJWT } = require('../middlewares/jwt-validation');
+const { isDate } = require('../helpers/isDate');
 
 
 const { getEvents, createEvent, updatetEvent, deleteEvent } = require('../controllers/events');
@@ -16,13 +19,32 @@ const { getEvents, createEvent, updatetEvent, deleteEvent } = require('../contro
 router.use( validateJWT );
 
 // Obtain events
-router.get('/', getEvents);
+router.get(
+    '/',
+
+    getEvents);
 
 // Create events
-router.post( '/', createEvent );
+router.post(
+    '/',
+    [
+        check( 'title', 'El título es obligatorio').not().isEmpty(),
+        check( 'start', 'La fecha de inicio es obligatoria').custom( isDate ),
+        check( 'end', 'La fecha de finalización es obligatoria').custom( isDate ),
+        fieldValidations
+    ],
+    createEvent );
 
 // Update events
-router.put( '/:id', updatetEvent );
+router.put(
+    '/:id',
+    [
+        check( 'title', 'El título es obligatorio').not().isEmpty(),
+        check( 'start', 'La fecha de inicio es obligatoria').custom( isDate ),
+        check( 'end', 'La fecha de finalización es obligatoria').custom( isDate ),
+        fieldValidations
+    ],
+    updatetEvent );
 
 // Delete events
 router.delete( '/:id', deleteEvent );
